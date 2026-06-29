@@ -44,3 +44,48 @@ Feature engineering in SQL for data analysis involves strategically crafting new
 ## Feature Engineering CODES
 
 #### DataBase Creation AND Importation Process
+
+
+
+
+
+
+
+
+
+
+
+## Results/Findings
+A. Carrier Operational Resilience (Monthly Trended Degradation)  
+Overall flight volume significantly dropped from Month 1 to Month 2 across the entire aviation network. Despite lower flight numbers, operational resilience was highly volatile: while traditional heavyweights like American Airlines drastically reduced their average delays, several carriers—most notably Virgin America and JetBlue—suffered severe operational bottlenecks, seeing their average delays spike by over 100%.
+
+#### Key Insights
+1. The Spike Vulnerability (Virgin America & JetBlue):
+
+-  Virgin America saw its average departure delays skyrocket from 7.7 minutes in Month 1 to 25.7 minutes in Month 2.
+
+-  JetBlue Airways followed a similar negative trend, with departure delays worsening from 12.1 minutes to 19.9 minutes.
+
+**Business Translation:** These carriers failed to stabilize operations even when handling fewer flights, pointing to deep underlying systemic or staffing constraints.
+
+2. The Efficiency Champions (American Airlines & Southwest):
+
+- American Airlines managed to cut its average departure delays nearly in half (13.9 minutes down to 7.1 minutes).
+
+- Southwest Airlines Co, despite remaining the highest-volume carrier by a wide margin, successfully reduced its average arrival delays from 6.6 minutes down to a negligible 1.5 minutes.
+
+**Business Translation:** These organizations effectively optimized scheduling and ground-handling efficiencies as capacity tightened.
+
+3. Persistent Bottom-Performers (Frontier & American Eagle):
+
+- Frontier Airlines and American Eagle consistently registered severe delays in both months, routinely averaging 20+ minutes per departure.
+
+**Business Translation:** Their issues are chronic and structural rather than seasonal flukes.
+
+## Recommendations
+A. Carrier Operational Resilience (Monthly Trended Degradation)
+1. Conduct a Root-Cause Deep Dive on Outliers: Investigate what drove the massive operational degradation for Virgin America and JetBlue in Month 2. Was it localized weather at major hubs, tech outages, or labor shortages?
+
+2. Review Service Level Agreements (SLAs): If these carriers are core corporate partners or vendors, use these performance numbers to audit contract compliance and renegotiate terms based on actual reliability data.
+
+B.
