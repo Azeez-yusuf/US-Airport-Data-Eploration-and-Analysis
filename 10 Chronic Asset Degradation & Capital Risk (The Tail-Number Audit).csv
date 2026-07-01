@@ -1,0 +1,11 @@
+TAIL_NUMBER,operating_carrier,total_legs_flown,total_lost_passenger_minutes,baseline_delay_per_flight,total_diversions
+N79011,"United Air Lines Inc",5,1166,233.20,0
+N228UA,"United Air Lines Inc",6,1323,220.50,0
+N776UA,"United Air Lines Inc",6,900,150.00,0
+N660UA,"United Air Lines Inc",6,843,140.50,0
+N651UA,"United Air Lines Inc",5,669,133.80,0
+N7ACAA,"American Airlines Inc",6,753,125.50,0
+N5FSAA,"American Airlines Inc",41,4546,110.88,0
+N656UA,"United Air Lines Inc",13,1364,104.92,0
+N664UA,"United Air Lines Inc",22,2293,104.23,0
+N780UA,"United Air Lines Inc",6,603,100.50,0

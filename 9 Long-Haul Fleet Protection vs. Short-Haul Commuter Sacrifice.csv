@@ -1,0 +1,4 @@
+fleet_distance_segment,total_q1_scheduled_flights,avg_departure_delay_mins,avg_arrival_delay_mins,cancellation_rate_pct
+"Short-Haul (<500mi)",383322,11.33,9.77,3.79
+"Medium-Haul (500-1500mi)",517042,12.79,8.73,2.53
+"Long-Haul (>1500mi)",128118,12.48,5.23,1.64

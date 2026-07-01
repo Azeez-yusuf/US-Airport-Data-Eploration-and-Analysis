@@ -1,0 +1,11 @@
+ORIGIN_AIRPORT,airport_name,total_departures,avg_tarmac_wait_mins,worst_single_taxi_out_mins
+JFK,"John F Kennedy International Airport A New York International Airport",17767,26.04,155
+LGA,"LaGuardia Airport Marine Air Terminal",18742,25.86,177
+PLN,"Pellston Regional Airport of Emmet County",102,25.66,43
+INL,"Falls International Airport",116,25.39,84
+JAC,"Jackson Hole Airport",760,25.15,141
+SBN,"South Bend International Airport A South Bend Regional",781,24.80,147
+CIU,"Chippewa County International Airport",123,24.53,61
+ISN,"Sloulin Field International Airport",552,24.17,136
+CMX,"Houghton County Memorial Airport",96,23.47,84
+DTW,"Detroit Metropolitan Airport",19937,23.45,159

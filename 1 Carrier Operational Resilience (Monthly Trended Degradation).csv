@@ -1,0 +1,29 @@
+operational_month,AIRLINE,total_completed_flights,avg_departure_delay_mins,avg_arrival_delay_mins
+1,"American Eagle Airlines Inc",51254,20.75,24.26
+1,"Frontier Airlines Inc",12949,21.58,22.54
+1,"Spirit Air Lines",16437,16.84,15.53
+1,"Skywest Airlines Inc",88947,14.81,13.99
+1,"Atlantic Southeast Airlines",92058,13.03,12.28
+1,"American Airlines Inc",82328,13.85,10.82
+1,"United Air Lines Inc",72048,17.46,10.53
+1,"JetBlue Airways",40144,12.09,9.90
+1,"Southwest Airlines Co",186394,12.22,6.60
+1,"Hawaiian Airlines Inc",12159,2.58,4.84
+1,"US Airways Inc",62280,6.52,4.77
+1,"Virgin America",8931,7.65,2.54
+1,"Alaska Airlines Inc",25203,3.89,0.49
+1,"Delta Air Lines Inc",120639,7.54,-0.02
+2,"Frontier Airlines Inc",1861,23.92,24.21
+2,"Virgin America",1280,25.71,22.05
+2,"American Eagle Airlines Inc",7282,17.23,19.66
+2,"JetBlue Airways",5387,19.93,18.79
+2,"Spirit Air Lines",2481,13.91,12.87
+2,"Skywest Airlines Inc",13006,13.78,12.27
+2,"United Air Lines Inc",10331,14.27,7.19
+2,"Atlantic Southeast Airlines",12698,8.28,6.73
+2,"Hawaiian Airlines Inc",1859,2.17,6.35
+2,"US Airways Inc",9061,6.69,3.44
+2,"American Airlines Inc",12087,7.11,3.12
+2,"Delta Air Lines Inc",18460,9.81,2.07
+2,"Southwest Airlines Co",27367,7.98,1.50
+2,"Alaska Airlines Inc",3851,4.17,1.07

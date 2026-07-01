@@ -1,0 +1,11 @@
+ORIGIN_AIRPORT,airport_name,CITY,STATE,total_departures,avg_departure_delay_mins,total_cancellations
+ILG,"Wilmington Airport",Wilmington,DE,54,39.20,0
+SCE,"University Park Airport","State College",PA,138,35.21,0
+CEC,"Del Norte County Airport A Jack McNamara Field","Crescent City",CA,125,33.33,0
+ABR,"Aberdeen Regional Airport",Aberdeen,SD,133,32.48,0
+JMS,"Jamestown Regional Airport",Jamestown,ND,144,31.52,0
+IMT,"Ford Airport","Iron Mountain/Kingsford",MI,117,30.21,0
+DVL,"Devils Lake Regional Airport","Devils Lake",ND,98,29.55,0
+BPT,"Jack Brooks Regional Airport A Southeast Texas Regional","Beaumont/Port Arthur",TX,198,29.39,0
+TVC,"Cherry Capital Airport","Traverse City",MI,383,28.91,0
+STC,"St Cloud Regional Airport","St Cloud",MN,112,28.36,0

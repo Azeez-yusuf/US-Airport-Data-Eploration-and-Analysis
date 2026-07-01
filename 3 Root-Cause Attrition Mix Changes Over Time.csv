@@ -1,0 +1,9 @@
+operational_month,CANCELLATION_DESCRIPTION,total_cancellations,monthly_contribution_pct
+1,Weather,10669,49.26
+1,"Airline or Carrier",6598,30.46
+1,"National Air System",4390,20.27
+1,Security,3,0.01
+2,Weather,5750,71.52
+2,"National Air System",1375,17.10
+2,"Airline or Carrier",914,11.37
+2,Security,1,0.01

@@ -1,0 +1,4 @@
+scheduled_departure_hour,total_scheduled_flights,avg_departure_delay_mins,avg_arrival_delay_mins,cancellation_rate_pct
+0,293593,5.93,2.78,3.02
+1,642297,14.52,10.89,2.78
+2,92592,16.10,11.94,3.18

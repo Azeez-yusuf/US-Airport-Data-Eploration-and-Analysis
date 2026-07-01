@@ -1,0 +1,11 @@
+ORIGIN_AIRPORT,origin_city,DESTINATION_AIRPORT,destination_city,total_q1_flights,avg_arrival_delay_mins,delayed_flight_probability_pct
+JAC,Jackson,JFK,"New York",6,149.00,100.00
+TTN,Trenton,MSP,Minneapolis,9,132.67,66.67
+HDN,Hayden,DEN,Denver,6,121.00,100.00
+TTN,Trenton,DTW,Detroit,9,114.33,100.00
+DTW,Detroit,TTN,Trenton,9,109.67,100.00
+OAK,Oakland,MCI,"Kansas City",15,91.20,60.00
+ATL,Atlanta,ELM,Elmira,12,88.67,50.00
+DSM,"Des Moines",EWR,Newark,12,88.25,75.00
+ILG,Wilmington,TPA,Tampa,20,86.10,60.00
+DEN,Denver,PIA,Peoria,15,84.75,80.00
