@@ -170,7 +170,220 @@ SET SQL_SAFE_UPDATES = 1;
 
 -- CORE ANALYSIS ---------------------------------------------------------------------------------------------------------------
 
+```sql
 
+-- ---------------------------------------Insight 1 --------------------------------------------------------------------------------------------------
+
+/*
+Carrier Operational Resilience (Monthly Trended Degradation): Stakeholders need to see if a carrier's arrival delays are chronic across
+ the entire quarter or if they are stabilizing as winter recedes
+*/
+
+SELECT 
+    EXTRACT(MONTH FROM f.DATE) AS operational_month,
+    a.AIRLINE,
+    COUNT(*) AS total_completed_flights,
+    ROUND(AVG(f.DEPARTURE_DELAY), 2) AS avg_departure_delay_mins,
+    ROUND(AVG(f.ARRIVAL_DELAY), 2) AS avg_arrival_delay_mins
+FROM flights f
+JOIN airlines a ON f.AIRLINE = a.IATA_CODE
+WHERE f.CANCELLED = 0
+GROUP BY EXTRACT(MONTH FROM f.DATE), a.AIRLINE
+ORDER BY operational_month ASC, avg_arrival_delay_mins DESC;
+
+
+
+-- ---------------------------------------Insight 2 --------------------------------------------------------------------------------------------------
+
+/*
+Q1 Attrition & Cancellation Rates by Carrier: This identifies which carriers have underlying systemic operational issues versus those 
+that suffered isolated spikes
+*/
+
+SELECT 
+    a.AIRLINE,
+    COUNT(*) AS total_scheduled_flights,
+    SUM(f.CANCELLED) AS total_cancelled_flights,
+    ROUND((SUM(f.CANCELLED) / COUNT(*)) * 100, 2) AS cancellation_rate_pct
+FROM flights f
+JOIN airlines a ON f.AIRLINE = a.IATA_CODE
+GROUP BY a.AIRLINE
+ORDER BY cancellation_rate_pct DESC;
+
+
+
+-- ---------------------------------------------Insight 3-------------------------------------------------------------------------------------------
+
+/* Root-Cause Attrition Mix Changes Over Time: Understanding if the driving factors behind cancellations shift from environmental (Weather) to 
+operational (Carrier/ATC) across the quarter helps optimize risk mitigation strategies.
+*/
+
+SELECT 
+    EXTRACT(MONTH FROM f.DATE) AS operational_month,
+    cc.CANCELLATION_DESCRIPTION,
+    COUNT(*) AS total_cancellations,
+    ROUND((COUNT(*) / SUM(COUNT(*)) OVER(PARTITION BY EXTRACT(MONTH FROM f.DATE))) * 100, 2) AS monthly_contribution_pct
+FROM flights f
+JOIN cancellation_codes cc ON f.CANCELLATION_REASON = cc.CANCELLATION_REASON
+WHERE f.CANCELLED = 1
+GROUP BY EXTRACT(MONTH FROM f.DATE), cc.CANCELLATION_DESCRIPTION
+ORDER BY operational_month ASC, total_cancellations DESC;
+
+
+
+-- ---------------------------------------------Insight 4-------------------------------------------------------------------------------------------
+/*
+Macro Delays—Controllable vs. Uncontrollable Cost Drivers: This isolates internal operational failures (Airline Delay) from 
+external systemic failures (Weather, Air System/ATC) over the three-month period.
+*/
+
+SELECT 
+    EXTRACT(MONTH FROM DATE) AS operational_month,
+    ROUND(AVG(AIR_SYSTEM_DELAY), 2) AS avg_nas_delay_mins,
+    ROUND(AVG(SECURITY_DELAY), 2) AS avg_security_delay_mins,
+    ROUND(AVG(AIRLINE_DELAY), 2) AS avg_carrier_delay_mins,
+    ROUND(AVG(LATE_AIRCRAFT_DELAY), 2) AS avg_cascading_delay_mins,
+    ROUND(AVG(WEATHER_DELAY), 2) AS avg_direct_weather_delay_mins
+FROM flights
+WHERE CANCELLED = 0 
+  AND (AIR_SYSTEM_DELAY IS NOT NULL OR AIRLINE_DELAY IS NOT NULL)
+GROUP BY EXTRACT(MONTH FROM DATE)
+ORDER BY operational_month ASC;
+
+
+
+-- ---------------------------------------------Insight 5-------------------------------------------------------------------------------------------
+/* Persistent Hub Gridlocks (High-Volume Origin Analysis): By tracking performance across Q1, this filters out anomalies and 
+isolates airports that represent chronic structural risks to the network.
+*/
+
+SELECT 
+    f.ORIGIN_AIRPORT,
+    ap.AIRPORT AS airport_name,
+    ap.CITY,
+    ap.STATE,
+    COUNT(*) AS total_departures,
+    ROUND(AVG(f.DEPARTURE_DELAY), 2) AS avg_departure_delay_mins,
+    SUM(f.CANCELLED) AS total_cancellations
+FROM flights f
+JOIN airports ap ON f.ORIGIN_AIRPORT = ap.IATA_CODE
+WHERE f.CANCELLED = 0
+GROUP BY f.ORIGIN_AIRPORT, ap.AIRPORT, ap.CITY, ap.STATE
+HAVING total_departures >= 50 -- Minimum baseline volume threshold for Q1
+ORDER BY avg_departure_delay_mins DESC
+LIMIT 10;
+
+
+-- ---------------------------------------------Insight 6-------------------------------------------------------------------------------------------
+/*Ground Control Congestion & Tarmac Efficiencies: Identifies airports where ground operations consistently struggle with plane pushback-to-takeoff
+ sequencing across the quarter.
+ */
+ 
+ SELECT 
+    f.ORIGIN_AIRPORT,
+    ap.AIRPORT AS airport_name,
+    COUNT(*) AS total_departures,
+    ROUND(AVG(f.TAXI_OUT), 2) AS avg_tarmac_wait_mins,
+    ROUND(MAX(f.TAXI_OUT), 2) AS worst_single_taxi_out_mins
+FROM flights f
+JOIN airports ap ON f.ORIGIN_AIRPORT = ap.IATA_CODE
+WHERE f.CANCELLED = 0
+GROUP BY f.ORIGIN_AIRPORT, ap.AIRPORT
+HAVING total_departures >= 30
+ORDER BY avg_tarmac_wait_mins DESC
+LIMIT 10;
+
+
+
+-- ---------------------------------------------Insight 7-------------------------------------------------------------------------------------------
+
+/* High-Risk Route Volatility Corridor Analysis: pinpoints specific origin-destination pairs that present chronic reliability risks,
+ giving stakeholders data to renegotiate service level agreements or alter flight frequencies.
+*/
+
+SELECT 
+    f.ORIGIN_AIRPORT,
+    orig.CITY AS origin_city,
+    f.DESTINATION_AIRPORT,
+    dest.CITY AS destination_city,
+    COUNT(*) AS total_q1_flights,
+    ROUND(AVG(f.ARRIVAL_DELAY), 2) AS avg_arrival_delay_mins,
+    ROUND(SUM(CASE WHEN f.ARRIVAL_DELAY >= 15 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS delayed_flight_probability_pct
+FROM flights f
+JOIN airports orig ON f.ORIGIN_AIRPORT = orig.IATA_CODE
+JOIN airports dest ON f.DESTINATION_AIRPORT = dest.IATA_CODE
+GROUP BY f.ORIGIN_AIRPORT, orig.CITY, f.DESTINATION_AIRPORT, dest.CITY
+HAVING total_q1_flights >= 5
+ORDER BY avg_arrival_delay_mins DESC
+LIMIT 10;
+
+
+
+-- ---------------------------------------------Insight 8-------------------------------------------------------------------------------------------
+
+/* Diurnal (Time-of-Day) Inefficiency S-Curves: Delays usually cascade as the day progresses. This group-by analysis identifies 
+the precise hour of the day when airport networks hit a tipping point and begin collapsing.
+*/
+
+
+SELECT 
+    EXTRACT(HOUR FROM SCHEDULED_DEPARTURE) AS scheduled_departure_hour,
+    COUNT(*) AS total_scheduled_flights,
+    ROUND(AVG(DEPARTURE_DELAY), 2) AS avg_departure_delay_mins,
+    ROUND(AVG(ARRIVAL_DELAY), 2) AS avg_arrival_delay_mins,
+    ROUND(SUM(CANCELLED) / COUNT(*) * 100, 2) AS cancellation_rate_pct
+FROM flights
+GROUP BY EXTRACT(HOUR FROM SCHEDULED_DEPARTURE)
+ORDER BY scheduled_departure_hour ASC;
+
+
+-- ---------------------------------------------Insight 9-------------------------------------------------------------------------------------------
+/* Long-Haul Fleet Protection vs. Short-Haul Commuter Sacrifice: Evaluates whether network operations prioritized protection of expensive,
+ high-capacity long-haul flights at the expense of short-haul loops throughout the quarter.
+*/
+
+SELECT 
+    CASE 
+        WHEN DISTANCE < 500 THEN 'Short-Haul (<500mi)'
+        WHEN DISTANCE BETWEEN 500 AND 1500 THEN 'Medium-Haul (500-1500mi)'
+        ELSE 'Long-Haul (>1500mi)'
+    END AS fleet_distance_segment,
+    COUNT(*) AS total_q1_scheduled_flights,
+    ROUND(AVG(DEPARTURE_DELAY), 2) AS avg_departure_delay_mins,
+    ROUND(AVG(ARRIVAL_DELAY), 2) AS avg_arrival_delay_mins,
+    ROUND(SUM(CANCELLED) / COUNT(*) * 100, 2) AS cancellation_rate_pct
+FROM flights
+GROUP BY 
+    CASE 
+        WHEN DISTANCE < 500 THEN 'Short-Haul (<500mi)'
+        WHEN DISTANCE BETWEEN 500 AND 1500 THEN 'Medium-Haul (500-1500mi)'
+        ELSE 'Long-Haul (>1500mi)'
+    END
+ORDER BY cancellation_rate_pct DESC;
+
+
+-- ---------------------------------------------Insight 10-------------------------------------------------------------------------------------------
+/* Chronic Asset Degradation & Capital Risk (The Tail-Number Audit): In aviation, individual hulls (tail numbers) represent heavy capital investments.
+ Hulls with high average delays across three months indicate either localized mechanical issues or poor scheduling turnarounds.
+*/
+
+
+SELECT 
+    f.TAIL_NUMBER,
+    a.AIRLINE AS operating_carrier,
+    COUNT(*) AS total_legs_flown,
+    ROUND(SUM(f.ARRIVAL_DELAY), 2) AS total_lost_passenger_minutes,
+    ROUND(AVG(f.ARRIVAL_DELAY), 2) AS baseline_delay_per_flight,
+    SUM(f.DIVERTED) AS total_diversions
+FROM flights f
+JOIN airlines a ON f.AIRLINE = a.IATA_CODE
+WHERE f.TAIL_NUMBER IS NOT NULL AND f.CANCELLED = 0
+GROUP BY f.TAIL_NUMBER, a.AIRLINE
+HAVING total_legs_flown >= 5
+ORDER BY baseline_delay_per_flight DESC
+LIMIT 10;
+
+```
 
 
 ## Results/Findings
